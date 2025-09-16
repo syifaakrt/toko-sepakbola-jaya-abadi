@@ -58,3 +58,6 @@ Saya mencoba untuk membuka tutorial dari awal (0-2) dan benar-benar memahami mak
 Tidak ada, penjelasan sangat jelas dan sangat membantu.
 
 hasil akses POSTMAN
+![alt text](image-1.png)
+![alt text](image-2.png)
+![alt text](image-3.png)
