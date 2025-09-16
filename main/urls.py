@@ -8,7 +8,7 @@ urlpatterns = [
     path('xml/', show_xml, name = 'show_xml'),
     path('json/', show_json, name = 'show_json'),
     path('xml/<str:productId>/', show_xml_byId, name = 'show_xml_byId'),
-    path('json/<str:productId>', show_json_byId, name = 'show_json_byId'),
+    path('json/<str:productId>/', show_json_byId, name = 'show_json_byId'),
     path('add-product/', add_product, name = 'add_product'),
     path('product/<str:productId>/', show_product, name = 'show_product')
 ]
