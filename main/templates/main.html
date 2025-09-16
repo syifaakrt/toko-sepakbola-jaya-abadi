@@ -1,18 +1,45 @@
 <!DOCTYPE html>
 <html>
     <head>
-    <title>PBP Tugas 1</title>
+    <title>PBP Tugas 3</title>
     </head>
 
     <body>
+        {% extends 'base.html' %}
+        {% block content %}
         <h1>Toko Sepakbola Jaya Abadi</h1>
 
-        <h4>NPM: </h4>
-        <p>{{npm}}</p> <!-- Ubah sesuai dengan npm kamu -->
-        <h4>Name: </h4>
-        <p>{{name}}</p> <!-- Ubah sesuai dengan nama kamu -->
-        <h4>Class: </h4>
-        <p>{{class}}</p> <!-- Ubah sesuai dengan kelas kamu -->
+        <a href="{% url 'main:add_product' %}">
+        <button>+ Add Product</button>
+        </a>
+
+        <hr>
+
+        {% if not product_list %}
+        <p>Belum ada produk toko.</p>
+        {% else %}
+
+        {% for product in product_list %}
+        <div>
+        <h2><a href="{% url 'main:show_product' product.id %}">{{ product.name }}</a></h2>
+
+        {% if product.thumbnail %}
+        <img src="{{ product.thumbnail }}" alt="thumbnail" width="150" height="100">
+        <br />
+        {% endif %}
+
+        <h3> {{ product.price }} </h3>
+        <p>{{ product.description|truncatewords:25 }}...</p>
+
+        <p><a href="{% url 'main:show_product' product.id %}"><button>See Details</button></a></p>
+        </div>
+
+        <hr>
+        {% endfor %}
+
+        {% endif %}    
+        {% endblock content %}
+
     </body>
 
 </html>

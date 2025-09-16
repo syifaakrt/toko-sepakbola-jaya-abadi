@@ -1,3 +1,5 @@
+# Tugas 2
+
 1) Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial). 
 Saya memulai dengan menganalisis kode tutorial 1 yang kemarin sudah disampaikan, memahami dengan detail mengenai setiap barisnya, setelah itu kembali mengimplementasikannya ke dalam project baru. 
 
@@ -19,3 +21,14 @@ Karena Django menggunakan bahasa python yang merupakan bahasa pertama yang dipel
 
 6) Apakah ada feedback untuk asisten dosen tutorial 1 yang telah kamu kerjakan sebelumnya?
 Tidak ada, penjelasan sangat jelas dan sudah sangat cukup membantu
+
+# Tugas 3
+
+1) Jelaskan mengapa kita memerlukan data delivery dalam pengimplementasian sebuah platform?
+2) Menurutmu, mana yang lebih baik antara XML dan JSON? Mengapa JSON lebih populer dibandingkan XML?
+3) Jelaskan fungsi dari method is_valid() pada form Django dan mengapa kita membutuhkan method tersebut?
+4) Mengapa kita membutuhkan csrf_token saat membuat form di Django? Apa yang dapat terjadi jika kita tidak menambahkan csrf_token pada form Django? 
+5) Bagaimana hal tersebut dapat dimanfaatkan oleh penyerang?
+6) Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
+7) Apakah ada feedback untuk asdos di tutorial 2 yang sudah kalian kerjakan?
+Tidak ada, penjelasan sangat jelas dan sangat membantu.
