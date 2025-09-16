@@ -13,7 +13,7 @@ class Product (models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
-    price = models.IntegerField
+    price = models.IntegerField()
     description = models.TextField(max_length=500)
     thumbnail = models.URLField((""), max_length=200)
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='bola')
