@@ -27,6 +27,7 @@
     <body>
         {% extends 'base.html' %}
         {% block content %}
+        <h3>Hi, {{ request.user.username }}!</h3>
         <h1>Toko Sepakbola Jaya Abadi</h1>
 
         <a href="{% url 'main:add_product' %}">
@@ -52,7 +53,7 @@
             {% if product.user %}
                 <p>Added by: {{ product.user.username }}</p>
             {% else %}
-                <p>Added byr: Anonymous</p>
+                <p>Added by: Anonymous</p>
             {% endif %}
 
             <p><a href="{% url 'main:show_product' product.id %}"><button>See Details</button></a></p>

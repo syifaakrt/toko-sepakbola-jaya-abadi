@@ -65,7 +65,24 @@ hasil akses POSTMAN
 
 # Tugas 4
 1) Apa itu Django AuthenticationForm? Jelaskan juga kelebihan dan kekurangannya.
+Django authentication adalah sistem bawaan dalam kerangka kerja Django yang dirancang untuk melakukan verifikasi identitas pengguna/autentikasi dan memberikan apa yang boleh dilakukan oleh pengguna atau otorisasi. Kelebihannya, sistem ini sudah siap pakai, sehingga developer tidak perlu membuat benar-benar dari nol. Django auth juga sudah mendukung keamanan seperti login attemps. password reset & change. User dan permission dapat langsung dikelola melalui Django admin tanpa interface baru. Sistem ini juga mendukung middleware & decorators seperti @login_required
+
 2) Apa perbedaan antara autentikasi dan otorisasi? Bagaiamana Django mengimplementasikan kedua konsep tersebut?
+Autentikasi berfungsi untuk mengidentifikasi siapa pengguna tersebut, memastikan bahwa pengguna benar-benar pemilik akun. Misalnya, login dengan menggunakan username & password. Dalam hal ini Django menggunakan django.contrib.auth untuk fitur autentikasi, dimana terdapayt model user dengan atribut username, password, email, dll. fitur login dan logout, serta menggunakan AuthenticationMiddleware untuk mengenali user dari session dan decorator @login_required untuk melindungi view
+
+Otorisasi memnentukan apa yang boleh dilakukan oleh pengguna tersebut. Contohnya, admin dapat menambahkan produk, namun user (pembeli) hanya bisa melihat/membeli katalog produknya saja. Pada django, terdapat fitur permissions dan groups dalam mendukung otorisasi
+
 3) Apa saja kelebihan dan kekurangan session dan cookies dalam konteks menyimpan state di aplikasi web?
+Cookies adalah data yang disimpan di sisi klien atau browser. Kelebihannya, data yang disimpan dapat disimpan untuk jangka panjang, tidak membebani servar karena semua data ada pada client, dan mudah diakses untuk kebutuhan tertentu. Kekurangannya, Cookies memiliki kapasitas penyimpanan yang terbatas, hanya 4 KB per cookie. Dalam segi keamanan, cookie juga kurang aman karena mudah diakses dan dimanipulasi oleh user, sehingga anya cocok untuk data ringan, bukan data berat dan sensitif.
+
+Session merupakan data yang disimpan dari sisi server, sedangkan klien hanya mneyimpan sessions id yang biasanya disimpan di cookie. Kelebihannya, session aman untuk menyimpan data sensitif, karena tidak disimpan di client, bisa menyimpan data lebih besar daripada cookie, dan server bisa mengontrol masa hidup dan invalidasi session secara langsung. namun, session membebani server karena harus menyimpan state untuk setiap user. Jika skalabilitas tinggi (banyak user) maka butuh mekanisme secara lanjut agar dapat ditangani. Karena klien tetap menyimpan session id di cookie, maka tetap ada risiko pencurian session
+
 4) Apakah penggunaan cookies aman secara default dalam pengembangan web, atau apakah ada risiko potensial yang harus diwaspadai? Bagaimana Django menangani hal tersebut?
+Tidak otomatis aman secara default. terdapat beberapa hal yang perlu diwaspadai, karena cookies menyimpan data pada sisi klien, yaitu pencurian cookie, manipulasi cookie, cross site scripting, dan cross site request forgery. Django menangani hal ini dengan mengenkripsi session cookie sehingga djangotida menyimpan data session langsung di cookie, melainkan hanya session id. Adapun HttpOnly, yang membuat session cookie tidak dapat diakses oleh JavaScript, sehingga mencegah pencurian via XSS. Selain itu Django juga menggunakan token CSRF dan mengimplementasikan Session Expiration.
+
 5) Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
+Dalam menerapkan fungsi login dan registrasi, saya perlu menambahkan template html baru untuk tampilan login dan registrasi. Selain itu, pada views.py saya melakukan import dari django.contrib.auth untuk nanti melakukan autentikasi, serta menambahkan fungsi khusus untuk melakukan register dan login. Setelah itu, saya menghubungkan semuanya menggunakan perantara yang diatur pada urls.py
+
+Untuk menghubungkan model Product dengan User, saya perlu melakukan import User pada models.py dan manambah atribut baru pada Product untuk menyimpan user dengan menggunakan ForeignKey dan mengakses produk user dengan product.user
+
+Untuk menampilkan username yang sedang login, saya cukup mengakses product.user.username. sedangkan untuk menampilkan last login, saya menggunakan data dari cookies dengan menyimpan data bernama last_login yang isinya timestamp terakhir kalo pengguna login.
