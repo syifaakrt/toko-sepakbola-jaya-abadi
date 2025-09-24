@@ -1,14 +1,21 @@
+import datetime
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from .models import Product
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.core import serializers
 from .forms import ProductForms
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
+@login_required(login_url='/login')
 def show_main(request):
     product_list = Product.objects.all()
-    return render(request, "main.html", {'product_list':product_list})
+    return render(request, "main.html", {'product_list':product_list, 'last_login': request.COOKIES.get('last_login', 'Never')})
 
 def show_xml(request):
     product_list = Product.objects.all()
@@ -35,16 +42,53 @@ def show_json_byId(request, productId):
         return HttpResponse(json_data, content_type = "application/json")
     except Product.DoesNotExist:
         return HttpResponse(status=404)
-
+    
+@login_required(login_url='/login')
 def add_product(request):
     form = ProductForms(request.POST or None)
     if (form.is_valid and request.method == "POST"):
-        form.save()
+        product_entry = form.save(commit = False)
+        product_entry.user = request.user
+        product_entry.save()
         return redirect('main:show_main')
     
     context = {"form":form}
     return render(request, 'add_product.html', context)
 
+@login_required(login_url='/login')
 def show_product(request, productId):
     product = get_object_or_404(Product, pk=productId)
     return render(request, 'product_details.html', {'product':product})
+
+def register(request):
+    form = UserCreationForm()
+
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your account has been successfully created!')
+            return redirect('main:login')
+    context = {'form':form}
+    return render(request, 'register.html', context)
+
+def login_user(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
+
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            response = HttpResponseRedirect(reverse("main:show_main"))
+            response.set_cookie('last_login', str(datetime.datetime.now()))
+            return response
+    else:
+        form = AuthenticationForm(request)
+        context = {'form': form}
+        return render(request, 'login.html', context)
+
+def logout_user(request):
+    logout(request)
+    response = HttpResponseRedirect(reverse('main:login'))
+    response.delete_cookie('last_login')
+    return response

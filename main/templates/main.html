@@ -1,7 +1,27 @@
 <!DOCTYPE html>
 <html>
     <head>
-    <title>PBP Tugas 3</title>
+    <title>PBP Tugas 4</title>
+    <style>
+      .product-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+
+      .product-card {
+        border: 1px solid #ddd;
+        padding: 15px;
+        border-radius: 8px;
+        text-align: center;
+      }
+
+      .product-card img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 5px;
+      }
+    </style>
     </head>
 
     <body>
@@ -10,32 +30,39 @@
         <h1>Toko Sepakbola Jaya Abadi</h1>
 
         <a href="{% url 'main:add_product' %}">
-        <button>+ Add Product</button>
+        <button style= "margin: 8px;">+ Add Product</button>
         </a>
-
-        <hr>
 
         {% if not product_list %}
         <p>Belum ada produk toko.</p>
         {% else %}
-
+        <div class = "product-container">
         {% for product in product_list %}
-        <div>
-        <h2><a href="{% url 'main:show_product' product.id %}">{{ product.name }}</a></h2>
+            <div class = "product-card">
+            <h2><a href="{% url 'main:show_product' product.id %}">{{ product.name }}</a></h2>
 
-        {% if product.thumbnail %}
-        <img src="{{ product.thumbnail }}" alt="thumbnail" width="150" height="150">
-        <br />
-        {% endif %}
+            {% if product.thumbnail %}
+            <img src="{{ product.thumbnail }}" alt="thumbnail" width="150">
+            <br />
+            {% endif %}
 
-        <h3> {{ product.price }} </h3>
-        <p>{{ product.description|truncatewords:25 }}...</p>
+            <h3> {{ product.price }} </h3>
+            <p>{{ product.description|truncatewords:25 }}...</p>
 
-        <p><a href="{% url 'main:show_product' product.id %}"><button>See Details</button></a></p>
-        </div>
+            {% if product.user %}
+                <p>Added by: {{ product.user.username }}</p>
+            {% else %}
+                <p>Added byr: Anonymous</p>
+            {% endif %}
 
-        <hr>
+            <p><a href="{% url 'main:show_product' product.id %}"><button>See Details</button></a></p>
+            </div>
         {% endfor %}
+            </div>
+            <h5>Sesi terakhir login: {{ last_login }}</h5>
+            <a href="{% url 'main:logout' %}">
+            <button>Logout</button>
+            </a>
 
         {% endif %}    
         {% endblock content %}
