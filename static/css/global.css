@@ -2,12 +2,12 @@
 .form-style form input:focus,
 .form-style form textarea:focus,
 .form-style form select:focus {
-    outline: none;
-    border:1px solid #19183B;
-    box-shadow: 0 0 0 3px #19183B;
-    margin: 4rem;
-    width: 100%;
-    height: 20px;
+  outline: none;
+  border:1px solid #19183B;
+  box-shadow: 0 0 0 3px #19183B;
+  margin: 4rem;
+  width: 100%;
+  height: 20px;
 
 }
 .form-style th {
@@ -74,7 +74,7 @@ body {
 }
 
 .form-style .helptext {
-  font-size: 0.8rem; /* 12px */
+  font-size: 0.8rem;
   color: #515151;
 }
 
@@ -94,44 +94,44 @@ h3 {
   margin-bottom: 1rem;
 }
 .register-card h1 {
-  margin-bottom: 1rem; /* atur sesuai selera, misal 24px */
+  margin-bottom: 1rem;
 }
 
 .form-style input[type="checkbox"] {
-    width: 1.25rem;
-    height: 1.25rem;
-    padding: 0;
-    border:0.1px solid #19183B;
-    border-radius: 8px;  
-    background-color: #E7F2EF;
-    cursor: pointer;
-    position: relative;
+  width: 1.25rem;
+  height: 1.25rem;
+  padding: 0;
+  border:0.1px solid #19183B;
+  border-radius: 8px;  
+  background-color: #E7F2EF;
+  cursor: pointer;
+  position: relative;
 
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 
 .form-style input[type="checkbox"]:checked {
-    background-color: #19183B;
-    border-color: #19183B;
+  background-color: #19183B;
+  border-color: #19183B;
 }
 
 .form-style input[type="checkbox"]:checked::after {
-    content: '✓';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #E7F2EF;
-    font-weight: bold;
-    font-size: 0.875rem;
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #E7F2EF;
+  font-weight: bold;
+  font-size: 0.875rem;
 }
 
 .form-style input[type="checkbox"]:focus {
-    outline: none;
-    border-color: #19183B;
-    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+  outline: none;
+  border-color: #19183B;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
 }
 
 a.btn {
@@ -238,7 +238,7 @@ input[type="submit"]:hover {
 .product-card h3 {
   color: #1c1975ff;
   font-size: 24px !important;
-  font-weight: 700 !important; /* Ganti dari 2px ke 700 */
+  font-weight: 700 !important;
   margin: 0.5rem 0 !important;
 }
 
