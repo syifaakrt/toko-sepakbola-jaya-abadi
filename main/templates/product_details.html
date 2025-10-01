@@ -1,23 +1,54 @@
-<!DOCTYPE html>
-<html>
-    <head>
-    <title>PRODUCT DETAILS</title>
-    </head>
+{% extends 'base.html' %}
+{% load static %}
 
-    <body>
-        {% extends 'base.html' %}
-        {% block content %}
-        <p><a href="{% url 'main:show_main' %}"><button>← Back to Product List</button></a></p>
+{% block meta %}
+<title>{{ product.name }} - Product Details</title>
+{% endblock meta %}
 
-        <h1>{{ product.title }}</h1>
+{% block content %}
+
+<div style="max-width: 800px; margin: 0 auto; padding: 2rem;">
+    <!-- Back Button -->
+    <a href="{% url 'main:show_main' %}">
+        <button style="width: 14rem; padding: 0.5rem; margin-bottom: 2rem;">
+            ← Back to Product List
+        </button>
+    </a>
+
+    <!-- Product Details -->
+    <div style="text-align: center;">
+        <h1 style="font: 600 32px 'Poppins', sans-serif; margin-bottom: 1rem;">
+            {{ product.name }}
+        </h1>
+
         {% if product.thumbnail %}
-        <img src="{{ product.thumbnail }}" alt="Product thumbnail" width="300">
-        <br /><br />
+        <div style="margin: 2rem 0;">
+            <img src="{{ product.thumbnail }}" alt="Product thumbnail" 
+                 style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        </div>
         {% endif %}
-        <h3> {{ product.price }} </h3>
-        <p>{{ product.description }}</p>
 
-        {% endblock content %}    
-    </body>
+        <h3 style="font-size: 28px; color: #1c1975ff; font-weight: 700; margin: 1rem 0; text-align: left">
+            {{ product.price }}
+        </h3>
 
-</html>
+        <div style="text-align: left; margin-top: 2rem; line-height: 1.8;">
+            <h4 style="font-size: 18px; font-weight: 600; margin-bottom: 0.5rem;">Description:</h4>
+            <p style="color: #4b5563;">{{ product.description }}</p>
+        </div>
+
+        <!-- Action Buttons (Optional) -->
+        {% if user.is_authenticated and product.user == user %}
+        <div style="display: flex; gap: 1rem; margin-top: 3rem; justify-content: center;">
+            <a href="{% url 'main:edit_product' product.id %}" style="flex: 1; max-width: 200px;">
+                <button style="width: 100%;">Edit Product</button>
+            </a>
+            <a href="{% url 'main:delete_product' product.id %}" style="flex: 1; max-width: 200px;">
+                <button class="btn-delete" style="width: 100%;">Delete Product</button>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock content %}
