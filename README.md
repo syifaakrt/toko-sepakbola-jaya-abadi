@@ -86,3 +86,108 @@ Dalam menerapkan fungsi login dan registrasi, saya perlu menambahkan template ht
 Untuk menghubungkan model Product dengan User, saya perlu melakukan import User pada models.py dan manambah atribut baru pada Product untuk menyimpan user dengan menggunakan ForeignKey dan mengakses produk user dengan product.user
 
 Untuk menampilkan username yang sedang login, saya cukup mengakses product.user.username. sedangkan untuk menampilkan last login, saya menggunakan data dari cookies dengan menyimpan data bernama last_login yang isinya timestamp terakhir kalo pengguna login.
+
+# Tugas 5
+1) Jika terdapat beberapa CSS selector untuk suatu elemen HTML, jelaskan urutan prioritas pengambilan CSS selector tersebut!
+Urutan prioritas pengambilan CSS dimulai dari Inline Style>ID Selector>Class, Atribut, dan Pseudo-class>Element dan Pseudo-element>Universal Selector.
+a. Inline Style
+Inline style ditulis langsung di dalam tag html dengan menggunakan atribut style. Hal ini menjadikan inline style lebih prioritas, karena menempel langsung dengan elemen yang ingin diberikan style.
+contohnya, ```<p style="color:blue;">Teks ini biruuuu</p>```
+b. ID Selector
+Menggunakan tanda tagar di depan ID. Karena ID unik, maka penggunaan ID Selector memiliki spesifikasi yang sangat tinggi, karena langsung mengacu kepada satu ID tertentu.
+contohnya, ```<p id="judul">Hello</p>``` pada kode HTML, sedangkan pada kode CSS ```#judul { color: blue; }``` yang artinya style tersebut akan diimplementasikan pada text "Hello"
+c. Class, Atribut, dan Pseudo-class 
+Class dapat digunakan oleh banyak elemen di kode HTML. Berbeda dengan ID yang hanya boleh digunakan oleh salah satu elemen sehingga menjadikannya unik dan langsung menuju ke elemen yang spesifik. Contoh class adalah ```<p class="highlight">Ini teks</p>``` dan pada CSS ditandai dengan diawali titik sebelum nama class (contoh: .highlight). 
+
+Sedangkan atribut, menunjukkan informasi tambahan mengenai elemen tersebut, prioritasnya setara dengan class. Contohnya, pada HTML ```<input type="text" />``` dengan CSS ```[type="text"] { border: 1px solid; } ```. 
+
+Pseudo-class merupakan kondisi tertentu yang sedang berlangsung pada elemen seperti ketika dalam keadaan default, hover, dan selected, contohnya pada HTML ```<a href="#">Link</a>``` dan pada CSS ```<a href="#">Link</a>```
+
+d. Element dan Pseudo-element
+Element Selector menargetkan elemen HTML secara langsung berdasarkan tag yang digunakan. Prioritasnya lebih rendah dibanding class dan ID. Contohnya, pada HTML: ```<p>Hello World</p>``` dan pada CSS: ```p { color: black; }``` yang artinya style tersebut akan diterapkan pada semua elemen ```<p>``` di halaman. 
+
+Sedangkan Pseudo-element menargetkan bagian tertentu dari elemen, seperti baris pertama, sebelum atau sesudah konten. Contohnya pada HTML: ```<p>Hello World</p>``` dan pada CSS:```p::first-line { font-weight: bold; }``` yang artinya hanya baris pertama dari teks "Hello World" yang akan dibuat tebal.
+
+e. Universal Selector
+Universal Selector menargetkan semua elemen di halaman dengan tanda *, tetapi prioritasnya sangat rendah dibanding selector lain. Contohnya, pada HTML: ```<p>Hello</p> <div>World</div>``` dan pada CSS: ```* { margin: 0; padding: 0; }``` yang artinya semua elemen di halaman akan memiliki margin dan padding nol, kecuali ada aturan lain yang lebih spesifik.
+
+Sedangkan Inheritance (pewarisan) adalah properti yang diturunkan dari elemen induk ke anaknya, seperti color atau font-family. Contohnya pada HTML:
+```<div style="color: purple;">```
+  ```<p>Hello World</p>```
+```</div>```
+dan pada CSS tidak perlu ditulis lagi karena properti color diwariskan, sehingga teks "Hello World" akan berwarna ungu.
+
+2) Mengapa responsive design menjadi konsep yang penting dalam pengembangan aplikasi web? Berikan contoh aplikasi yang sudah dan belum menerapkan responsive design, serta jelaskan mengapa!
+Responsive design merupakan konsep untuk menyesuaikan tampilan web sesuai dengan device yang sedang dipakai oleh pengguna (desktop, mobile, tablet). Konsep ini penting karena sebagai developer, perlu diperhatikan inklusivitas aplikasi yang dibuat, sehingga aplikasi dapat digunakan secara universal. Contoh aplikasi yang sudah menerapkannya adalah Tokopedia dan Shopee. Sedangkan yang belum menerapkan responsive design adalah Siak-NG, karena memiliki tampilan yang sama baik dalam mode desktop maupun mobile. 
+
+3) Jelaskan perbedaan antara margin, border, dan padding, serta cara untuk mengimplementasikan ketiga hal tersebut!
+Margin merupakan ruang di luar elemen, atau jarak antara elemen dengan elemen lain di sekitarnya. contoh implementasi pada CSS 
+```div｛```
+  ```margin: 20px;  ```     
+  ```margin-top: 10px;  ```
+  ```margin-right: 15px; ```
+  ```margin-bottom: 10px;```
+  ```margin-left: 15px;  ```
+```}```
+
+Border merupakan garis atau bingkai yang mengelilingi elemen, dan juga berada di antara padding dan margin. 
+contoh implementasi CSS
+```div {```
+  ```border: 2px solid black;   ```
+  ```border-radius: 10px;      ``` 
+  ```border-style: dashed;   ```  
+  ```border-color: red;       ```
+```}```
+
+Sedangkan padding, merupakan jarak yang ada pada kkonten elemen terhadap tepi border. contoh implementasi CSS
+```div {```
+  ```padding: 20px;       ```
+  ```padding-top: 10px;   ```
+  ```padding-right: 15px;  ```
+  ```padding-bottom: 10px;```
+  ```padding-left: 15px;   ```
+```}```
+
+4) Jelaskan konsep flex box dan grid layout beserta kegunaannya!
+Flexbox merupakan sistem layout satu dimensi yang mengatur elemen dalam baris (row) atau kolom (column) secara fleksibel. Flexbox memudahkan penyusunan elemen secara horizontal atau vertikal, pengaturan jarak antar elemen, serta alignment tanpa perlu banyak margin atau padding manual. 
+Contoh implementasi CSS
+
+```.container {```
+  ```display: flex;               ``` 
+  ```flex-direction: row;         ``` 
+  ```justify-content: space-between; ``` 
+  ```align-items: center;         ```
+```}```
+
+```css```
+```.item {```
+  ```flex: 1;                     ``` 
+```}```
+
+Sedangkan grid Layout merupakan sistem layout dua dimensi yang mengatur elemen dalam baris dan kolom secara presisi. Grid Layout sangat cocok untuk layout kompleks seperti dashboard atau galeri, karena dapat mengontrol ukuran, posisi, dan jarak antar elemen dengan mudah. Contoh implementasi CSS:  
+```css```
+```.container {```
+  ```display: grid;                     ```
+  ```grid-template-columns: 1fr 2fr 1fr;```
+  ```grid-template-rows: auto;          ```
+  ```gap: 10px;                         ```
+```}```
+
+```css```
+```.item1 {```
+  ```grid-column: 1 / 3;   ```
+```}```
+
+```css```
+```.item2 {```
+  ```grid-row: 1 / 2;      ```
+```}```
+
+5) Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial)!
+Saya mulai dengan membuat halaman-halaman utama seperti login, register, tambah product, edit product, dan detail product agar tampilannya lebih menarik dan user-friendly. Saya memastikan setiap form memiliki label jelas, input field yang nyaman digunakan, dan tombol submit yang menonjol. Saya menambahkan warna kontras, padding dan margin yang rapi.
+
+Saya mendesain halaman daftar product menggunakan card untuk menampilkan setiap produk agar terlihat rapi dan menarik. Saya menggunakan flexbox atau grid layout sehingga card tersusun dengan baik dan ada jarak antar card. Saya menambahkan bayangan, border-radius, dan warna yang konsisten untuk mempercantik tampilannya. Saya juga memastikan halaman ini responsive, misalnya menampilkan 1-3 card per baris di desktop dan 1 card per baris di mobile.
+
+Saya menambahkan logika agar halaman daftar product bisa menyesuaikan dengan kondisi data. Jika belum ada product yang tersimpan, saya menampilkan gambar ilustrasi dan pesan agar pengguna tahu bahwa halaman ini kosong. Jika sudah ada product, saya menampilkan setiap product dalam bentuk card, lengkap dengan gambar, nama, harga, deskripsi, dan dua tombol untuk edit dan hapus, sehingga pengguna bisa langsung melakukan tindakan pada produk yang ada.
+
+Saya membuat navbar yang responsive agar pengguna bisa mengakses fitur-fitur aplikasi dengan mudah, baik di desktop maupun di mobile. Saya menggunakan flexbox untuk menyusun menu item secara horizontal di layar besar, dan menambahkan hamburger menu untuk layar kecil.
