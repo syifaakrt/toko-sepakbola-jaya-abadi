@@ -7,6 +7,24 @@
 {% block content %}
 {% include 'navbar.html' %}
 
+<style>
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  text-align: center;
+  padding: 2rem;
+}
+
+.empty-state.hidden {
+  display: none !important;
+}
+
+
+</style>
+
 <div class="relative overflow-hidden" style="background: linear-gradient(to right, #c3dfffff, #ff6b6bff);margin-right:-4rem; margin-left: -4rem; margin-top: -1rem">
   <div class="pt-16 pb-80 sm:pt-24 sm:pb-40 lg:pt-40 lg:pb-48">
     <div class="relative mx-auto max-w-7xl px-4 sm:static sm:px-6 lg:px-8">
@@ -53,7 +71,7 @@
                 </div>
                 <div class="h-64 w-44 overflow-hidden rounded-lg">
                   <img
-                    src="https://jwanderson.com/cdn/shop/files/KW1427YN0468429_Ecomm_M_D5_a3475996-1218-4364-95e4-0e05538b5953.jpg?v=1756392326&width=2400"
+                    src="https://jwanderson.com/cdn/shop/files/KW1427YN0458429_Ecomm_M_D5_a3475996-1218-4364-95e4-0e05538b5953.jpg?v=1756392326&width=2400"
                     alt="" class="size-full object-cover" />
                 </div>
               </div>
@@ -82,85 +100,250 @@
     </div>
   </div>
 </div>
-<div id="konten" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; margin-top: 4rem">
-    <h3 style="font: 600 32px 'Poppins', sans-serif; margin: 0;">Hi, {{ request.user.username }}!</h3>
-    <a href="{% url 'main:add_product' %}">
-        <button style="width: 8rem;">+ Add Product</button>
-    </a>
+
+<div id="konten" style="display: flex; justify-content: space-between; align-items: center; margin: 4rem 0 2rem 0;">
+  <h3 style="font: 600 32px 'Poppins', sans-serif; margin: 0;">Hi, {{ request.user.username }}!</h3>
+  <div style="display: flex; gap: 1rem;">
+    <button id="refreshBtn" style="width: 8rem;">Refresh</button>
+    <button onclick="showModal()" style="width: 8rem;">+ Add Product</button>
+  </div>
 </div>
 
-{% if not product_list %}
-  <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; text-align: center; padding: 2rem;">
-    <!-- Icon/Gambar -->
-    <svg xmlns="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Empty_set.svg/1024px-Empty_set.svg.png" style="width: 120px; height: 120px; margin-bottom: 1.5rem; opacity: 0.3;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-    </svg>
-    
-    <!-- Pesan -->
-    <h2 style="font-size: 24px; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">
-      No Products Yet
-    </h2>
-    <p style="font-size: 16px; color: #6b7280; margin-bottom: 2rem; max-width: 400px;">
-        It looks like there are no products listed in this store. Start by adding your first product!
-    </p>
-    
-    <!-- Button -->
-    <a href="{% url 'main:add_product' %}">
-      <button style="width:124px">
-        + Add Product
-      </button>
-    </a>
+<div id="loading" class="bg-white rounded-lg border border-gray-200 p-12 text-center hidden">
+  <svg class="animate-spin h-8 w-8 text-green-600 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+  </svg>
+  <p class="text-gray-600 mt-3">Loading products...</p>
+</div>
+
+<div id="empty" class="empty-state" style="display: none">
+  <svg xmlns="http://www.w3.org/2000/svg" style="width: 120px; height: 120px; margin-bottom: 1.5rem; opacity: 0.3;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+  </svg>
+  
+  <h2 style="font-size: 24px; font-weight: 600; color: #374151; margin-bottom: 0.5rem;">
+    No Products Yet
+  </h2>
+  <p style="font-size: 16px; color: #6b7280; margin-bottom: 2rem; max-width: 400px;">
+      It looks like there are no products listed in this store. Start by adding your first product!
+  </p>
+  
+    <button onclick="showModal()" style="width:124px">
+      + Add Product
+    </button>
+</div>
+
+<div id="product-container" class="product-container"></div>
+
+<h5>Sesi terakhir login: {{ last_login }}</h5>
+  <button class="logoutBtn btn-delete" style="width: 30%; margin-top: 1rem;">Logout</button>
+
+<div id="deleteModal" class="hidden fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg shadow-lg p-6 w-80 text-center">
+    <h2 class="text-lg font-semibold mb-2">Hapus produk ini?</h2>
+    <p class="text-gray-600 mb-4">Tindakan ini tidak bisa dibatalkan.</p>
+    <div class="flex justify-center gap-4">
+      <button id="cancelDeleteBtn" class="px-4 py-2 border rounded-lg">Batal</button>
+      <button id="confirmDeleteBtn" class="px-4 py-2 bg-red-600 text-white rounded-lg">Hapus</button>
+    </div>
   </div>
-{% else %}
-  <div class="product-container">
-    {% for product in product_list %}
-    <div class="product-card">
-      {% if product.thumbnail %}
-        <div style="display: flex; justify-content: center; margin-bottom: 1rem;">
-            <div class="h-56 w-44 overflow-hidden rounded-lg">
-                <img
-                src= {{ product.thumbnail }}
-                alt="" class="size-full object-cover" />
-            </div>
-        </div>
-      {% endif %}
+</div>
 
-      <h2 style="text-align: left; font: 600 20px 'Poppins', sans-serif; margin: 0;">
-        <a href="{% url 'main:show_product' product.id %}">{{ product.name }}</a>
-      </h2>
+<script>
+const PRODUCT_API_ENDPOINT = "{% url 'main:show_json' %}";
+const CURRENT_USER_ID = "{{ user.id|default_if_none:'' }}";
 
-      <h3 style="text-align: left; ">{{ product.price }}</h3>
-      <p style="text-align: left !important; display: block; width: 100%;">{{ product.description|truncatewords:5 }}...</p>
+const loadingSpinner = document.getElementById('loading');
+const emptyStateDisplay = document.getElementById('empty');
+const productContainer = document.getElementById('product-container');
+
+let allProductsData = [];
+
+function displayPageSection({ showLoading = false, showEmpty = false, showProducts = false }) {
+  loadingSpinner.style.display = showLoading ? 'block' : 'none';
+  emptyStateDisplay.style.display = showEmpty ? 'flex' : 'none';
+  productContainer.style.display = showProducts ? 'grid' : 'none';
+}
+
+function buildProductCardElement(product) {
+  const cardElement = document.createElement('div');
+  cardElement.className = 'product-card';
+
+  const productId = product.pk || product.id;
+  const fields = product.fields || product;
+  
+  const detailLink = `{% url 'main:show_product' '00000000-0000-0000-0000-000000000000' %}`.replace('00000000-0000-0000-0000-000000000000', productId);
+  const editLink = `{% url 'main:edit_product' '00000000-0000-0000-0000-000000000000' %}`.replace('00000000-0000-0000-0000-000000000000', productId);
+  const deleteLink = `{% url 'main:delete_product' '00000000-0000-0000-0000-000000000000' %}`.replace('00000000-0000-0000-0000-000000000000', productId);
+
+  const thumbnail = fields.thumbnail || '';
+  const thumbnailHtml = thumbnail 
+    ? `<img src='${thumbnail}' alt='${fields.name || ''}' class='size-full object-cover'>` 
+    : `<div class='size-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center'></div>`;
+
+  const description = fields.description || '';
+  const truncatedDescription = description.split(' ').slice(0, 5).join(' ');
+  
+  const username = fields.user__username || fields.username || 'Anonymous';
+  
+  const productUserId = fields.user || fields.user_id;
+
+  const editDeleteButtons = CURRENT_USER_ID && Number(CURRENT_USER_ID) === Number(productUserId)
+    ? `<a href='${editLink}' class='flex-1'>
+        <button class='btn-edit w-20'>Edit</button>
+      </a>
+      <button onclick="showDeleteModal('${productId}')" class="btn-delete w-full">Delete</button>
+`
+    : '';
+
+  const completeCardHtml = `
+    <div style="display: flex; justify-content: center; margin-bottom: 1rem;">
+      <div class="h-56 w-44 overflow-hidden rounded-lg">
+        ${thumbnailHtml}
+      </div>
+    </div>
+
+    <h2 style="text-align: left; font: 600 20px 'Poppins', sans-serif; margin: 0;">
+      <a href="${detailLink}">${fields.name || 'Untitled'}</a>
+    </h2>
+
+    <h3 style="text-align: left;">${fields.price || '0'}</h3>
+    <p style="text-align: left !important; display: block; width: 100%;">${truncatedDescription}${description ? '...' : ''}</p>
 
     <div style="margin-top: auto; padding-top: 1rem;">
-        {% if product.user %}
-            <p style="margin-bottom: 0.5rem;">Added by: {{ product.user.username }}</p>
-        {% else %}
-            <p style="margin-bottom: 0.5rem;">Added by: Anonymous</p>
-        {% endif %}
+      <p style="margin-bottom: 0.5rem;">Added by: ${username}</p>
 
-        <div class="flex gap-1">
-            <a href="{% url 'main:show_product' product.id %}" class="flex-[2]">
-            <button class="w-full">See Details</button>
-            </a>
-            {% if user.is_authenticated and product.user == user %}
-            <a href="{% url 'main:edit_product' product.id %}" class="flex-1">
-            <button class="btn-edit w-full">Edit</button>
-            </a>
-            <a href="{% url 'main:delete_product' product.id %}" class="flex-1">
-            <button class="btn-delete w-full">Delete</button>
-            </a>
-            {% endif %}
-        </div>
-        </div>
+      <div class="flex gap-1">
+        <a href="${detailLink}" class="flex-[2]">
+          <button class="w-40">See Details</button>
+        </a>
+        ${editDeleteButtons}
+      </div>
     </div>
-    {% endfor %}
-  </div>
+  `;
 
-  <h5>Sesi terakhir login: {{ last_login }}</h5>
-  <a href="{% url 'main:logout' %}">
-    <button class="btn-delete" style="width: 30%; margin-top: 1rem;">Logout</button>
-  </a>
-{% endif %}
+  cardElement.innerHTML = completeCardHtml;
+  return cardElement;
+}
+document.getElementById('refreshBtn').addEventListener('click', () => {
+  fetchProductsFromServer();
+});
+function renderAllProductCards(products) {
+  productContainer.innerHTML = '';
+  products.forEach(product => {
+    const cardElement = buildProductCardElement(product);
+    productContainer.appendChild(cardElement);
+  });
+}
+
+function displayProducts() {
+  productContainer.innerHTML = '';
+
+  if (allProductsData.length === 0) {
+    displayPageSection({ showEmpty: true, showProducts: false, showLoading: false });
+  } else {
+    renderAllProductCards(allProductsData);
+    displayPageSection({ showProducts: true, showEmpty: false, showLoading: false });
+  }
+}
+
+async function fetchProductsFromServer() {
+  try {
+    displayPageSection({ showLoading: true });
+    
+    const response = await fetch(PRODUCT_API_ENDPOINT, {
+      headers: { 'Accept': 'application/json' },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch products data from server');
+    }
+
+    const productsData = await response.json();
+    console.log('Products data received:', productsData);
+    console.log('Number of products:', productsData.length);
+    
+    allProductsData = productsData || [];
+    
+    displayProducts();
+  } catch (error) {
+    console.error('Error loading products:', error);
+    displayPageSection({ showEmpty: true });
+  }
+}
+
+document.addEventListener('productAdded', function() {
+    fetchProductsFromServer();
+});
+
+function initializeProductPage() {
+  fetchProductsFromServer();
+}
+
+initializeProductPage();
+
+document.querySelectorAll('.logoutBtn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    fetch("{% url 'main:logout' %}", {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": "{{ csrf_token }}",
+      },
+    })
+    .then(response => {
+      if (response.ok) {
+        showToast("Berhasil logout!", "Sampai jumpa lagi!");
+        setTimeout(() => {
+          window.location.href = "{% url 'main:login' %}";
+        }, 1500);
+      } else {
+        showToast("Logout gagal!", "error");
+      }
+    })
+    .catch(() => showToast("Terjadi kesalahan!", "error"));
+  });
+});
+
+let productIdToDelete = null;
+
+function showDeleteModal(productId) {
+  productIdToDelete = productId;
+  document.getElementById('deleteModal').classList.remove('hidden');
+}
+
+function hideDeleteModal() {
+  document.getElementById('deleteModal').classList.add('hidden');
+  productIdToDelete = null;
+}
+
+document.getElementById('cancelDeleteBtn').addEventListener('click', hideDeleteModal);
+document.getElementById('confirmDeleteBtn').addEventListener('click', async function() {
+  if (!productIdToDelete) return;
+
+  try {
+    const deleteUrl = `{% url 'main:delete_product' '00000000-0000-0000-0000-000000000000' %}`.replace('00000000-0000-0000-0000-000000000000', productIdToDelete);
+    
+    const response = await fetch(deleteUrl, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}',
+      },
+    });
+
+    if (response.ok) {
+      showToast("Produk dihapus!", "Produk berhasil dihapus dari katalog", "success");
+      hideDeleteModal();
+      fetchProductsFromServer(); 
+    } else {
+      showToast("Gagal menghapus produk!", "Terjadi kesalahan saat menghapus", "error");
+    }
+  } catch (error) {
+    showToast("Gagal!", "Tidak bisa terhubung ke server", "error");
+  }
+});
+
+
+</script>
 
 {% endblock content %}

@@ -10,7 +10,7 @@
 
   <div class="login-card">
     <h1 class="text-2xl font-bold text-navy-900">Login</h1>
-    <form method="POST" action="" class="form-style">
+    <form id="loginForm" method="POST" action="" class="form-style">
       {% csrf_token %}
       <table>
         {{ form.as_table }}
@@ -32,6 +32,59 @@
     <a href="{% url 'main:register' %}" class="text-blue-600 hover:underline">Register Now</a>
     </div>
   </div>
+
 </div>
+
+<script>
+  function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== "") {
+    const cookies = document.cookie.split(";");
+    for (let cookie of cookies) {
+      cookie = cookie.trim();
+      if (cookie.startsWith(name + "=")) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+document.querySelector("form.form-style").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const form = e.target;
+  const formData = new FormData(form);
+
+  try {
+    const response = await fetch("", {
+      method: "POST",
+      headers: {
+        "X-Requested-With": "XMLHttpRequest",
+        "X-CSRFToken": getCookie("csrftoken"),
+      },
+      body: formData,
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      document.cookie = "last_login=" + new Date().toISOString() + "; path=/";
+      showToast("Login Berhasil", data.message, "success");
+
+      setTimeout(() => {
+        window.location.href = data.redirect_url;
+      }, 1500);
+    } else {
+      showToast("Login Gagal", data.message, "error");
+    }
+  } catch (err) {
+    console.error("Error:", err);
+    showToast("Error", "Terjadi kesalahan pada server.", "error");
+  }
+});
+</script>
+
 
 {% endblock content %}
