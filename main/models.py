@@ -5,11 +5,11 @@ from django.contrib.auth.models import User
 # Create your models here.
 class Product (models.Model):
     CATEGORY_CHOICES = [
-        ('ball', 'Bola'),
-        ('shoes', 'Sepatu Bola'),
-        ('jersey', 'Jersey'),
-        ('gloves', 'Sarung Tangan'),
-        ('accessories', 'Aksesoris'),
+        ('Bola', 'Bola'),
+        ('Sepatu Bola', 'Sepatu Bola'),
+        ('Jersey', 'Jersey'),
+        ('Sarung Tangan', 'Sarung Tangan'),
+        ('Aksesoris', 'Aksesoris'),
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
